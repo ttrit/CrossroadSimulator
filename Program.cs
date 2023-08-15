@@ -14,7 +14,7 @@ public partial class Program
     public static int arrivalRateWest = 8;
 
     // Time for each car to clear the intersection
-    private int clearanceTime = 2;
+    public static int clearanceTime = 2;
 
     public static Queue<Car> northQueue = new Queue<Car>();
     public static Queue<Car> southQueue = new Queue<Car>();
@@ -27,6 +27,7 @@ public partial class Program
     private static bool lightEast = false;
 
     private static DateTime nextCarArrivalTime = DateTime.Now;
+    private static DateTime nextLightChange = DateTime.Now;
 
     static void Main(string[] args)
     {
@@ -35,6 +36,8 @@ public partial class Program
 
         while (true)
         {
+            GenerateCarArrivals();
+            ClearIntersection();
 
         }
     }
@@ -75,8 +78,44 @@ public partial class Program
         }
     }
 
+    public static void ClearIntersection()
+    {
+        if (lightNorth == true)
+        {
+            while (northQueue.Count > 0 && DateTime.Now >= northQueue.Peek().EntryTime + TimeSpan.FromSeconds(clearanceTime))
+            {
+                northQueue.Dequeue();
+            }
+        }
+
+        if (lightSouth == true)
+        {
+            while (southQueue.Count > 0 && DateTime.Now >= southQueue.Peek().EntryTime + TimeSpan.FromSeconds(clearanceTime))
+            {
+                southQueue.Dequeue();
+            }
+        }
+
+        if (lightWest == true)
+        {
+            while (westQueue.Count > 0 && DateTime.Now >= westQueue.Peek().EntryTime + TimeSpan.FromSeconds(clearanceTime))
+            {
+                westQueue.Dequeue();
+            }
+        }
+
+        if (lightEast == true)
+        {
+            while (eastQueue.Count > 0 && DateTime.Now >= eastQueue.Peek().EntryTime + TimeSpan.FromSeconds(clearanceTime))
+            {
+                eastQueue.Dequeue();
+            }
+        }
+    }
+
     public class Car
     {
+        public DateTime EntryTime { get; set; }
     }
 }
 
