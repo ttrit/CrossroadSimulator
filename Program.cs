@@ -8,10 +8,10 @@ public partial class Program
     private TimeSpan period2 = TimeSpan.FromSeconds(30);
     
     // Car arrival rates (cars per minute)
-    private int arrivalRateNorth = 10;
-    private int arrivalRateSouth = 5;
-    private int arrivalRateEast = 15;
-    private int arrivalRateWest = 8;
+    public static int arrivalRateNorth = 10;
+    public static int arrivalRateSouth = 5;
+    public static int arrivalRateEast = 15;
+    public static int arrivalRateWest = 8;
 
     // Time for each car to clear the intersection
     private int clearanceTime = 2;
@@ -26,9 +26,17 @@ public partial class Program
     private static bool lightWest = false;
     private static bool lightEast = false;
 
+    private static DateTime nextCarArrivalTime = DateTime.Now;
+
     static void Main(string[] args)
     {
+        // Set initial light states
         SetLights(true, true, false, false);
+
+        while (true)
+        {
+
+        }
     }
 
     public static void SetLights(bool north, bool south, bool west, bool east)
@@ -37,6 +45,34 @@ public partial class Program
         lightSouth = south;
         lightWest = west;
         lightEast = east;
+    }
+
+    public static void GenerateCarArrivals()
+    {
+        if (DateTime.Now >= nextCarArrivalTime)
+        {
+            for (int i = 0; i < arrivalRateNorth; i++)
+            {
+                northQueue.Enqueue(new Car());
+            }
+
+            for (int i = 0; i < arrivalRateSouth; i++)
+            {
+                southQueue.Enqueue(new Car());
+            }
+
+            for (int i = 0; i < arrivalRateWest; i++)
+            {
+                westQueue.Enqueue(new Car());
+            }
+
+            for (int i = 0; i < arrivalRateEast; i++)
+            {
+                eastQueue.Enqueue(new Car());
+            }
+
+            nextCarArrivalTime = nextCarArrivalTime.AddMinutes(1);
+        }
     }
 
     public class Car
