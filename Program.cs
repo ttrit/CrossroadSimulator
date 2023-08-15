@@ -12,19 +12,18 @@ public partial class Program
 
     static void Main(string[] args)
     {
-        Task.Run(() =>
-        {
+
+        var enqueueTask = new Task(() => {
             while (true)
             {
                 northQueue.Enqueue(new Car());
                 southQueue.Enqueue(new Car());
                 westQueue.Enqueue(new Car());
                 eastQueue.Enqueue(new Car());
-                Thread.Sleep(60000);
+                Thread.Sleep(6000);
             }
-        });
-
-        Task.Run(() =>
+        }, TaskCreationOptions.LongRunning);
+        var changeGreenLightTask = new Task(() =>
         {
             while (true)
             {
@@ -35,9 +34,14 @@ public partial class Program
                     IsTurnOn = !_northSouthTurn
                 };
                 _northSouthTurn = !_northSouthTurn;
-                Thread.Sleep(30000);
+                Thread.Sleep(3000);
             }
-        });
+        }, TaskCreationOptions.LongRunning);
+
+        enqueueTask.Start();
+        changeGreenLightTask.Start();
+
+        Console.ReadKey();
     }
 
     public class Car
