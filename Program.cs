@@ -23,6 +23,7 @@ public partial class Program
     public static Queue<Car> westQueue = new Queue<Car>();
     public static Queue<Car> eastQueue = new Queue<Car>();
 
+    // Initialize state for light in each directions
     private static bool lightNorth = false;
     private static bool lightSouth = false;
     private static bool lightWest = false;
@@ -41,6 +42,7 @@ public partial class Program
             GenerateCarArrivals();
             ClearIntersection();
 
+            // Switch lights if time elapsed
             if (DateTime.Now >= nextLightChange)
             {
                 SwitchLights();
@@ -73,19 +75,19 @@ public partial class Program
             {
                 southQueue.Enqueue(new Car() { EntryTime = DateTime.Now });
             }
-            Console.WriteLine("Car in south queue:{0}", northQueue.Count);
+            Console.WriteLine("Car in south queue:{0}", southQueue.Count);
 
             for (int i = 0; i < arrivalRateWest; i++)
             {
                 westQueue.Enqueue(new Car() { EntryTime = DateTime.Now });
             }
-            Console.WriteLine("Car in west queue:{0}", northQueue.Count);
+            Console.WriteLine("Car in west queue:{0}", westQueue.Count);
 
             for (int i = 0; i < arrivalRateEast; i++)
             {
                 eastQueue.Enqueue(new Car() { EntryTime = DateTime.Now });
             }
-            Console.WriteLine("Car in east queue:{0}", northQueue.Count);
+            Console.WriteLine("Car in east queue:{0}", eastQueue.Count);
 
 
             nextCarArrivalTime = nextCarArrivalTime.AddMinutes(1);
@@ -94,6 +96,7 @@ public partial class Program
 
     public static void ClearIntersection()
     {
+        // Check light is on for each ways 
         if (lightNorth == true)
         {
             while (northQueue.Count > 0 && DateTime.Now >= northQueue.Peek().EntryTime + TimeSpan.FromSeconds(clearanceTime))
